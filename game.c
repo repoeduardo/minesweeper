@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <time.h>
 
+// ANSI Color Codes
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define YELLOW  "\033[33m"
+#define CYAN    "\033[36m"
+
 typedef struct{
   int isBomb; // is it a bomb? [0 - no] [1 - yes]
   int isOpen; // is it open? [0 - no] [1 - yes]
@@ -91,8 +97,37 @@ void populateBombsAround(){
     }
 }
 
+void printBoard(){
+  printf("\n\n\t  ");
+  for(row = 0; row < boardSize; row++){
+    printf(YELLOW "  %d " RESET, row); // column indices
+  }
+  printf("\n\t  -----------------------------------------\n");
+  for(row = 0; row < boardSize; row++){
+    printf("\t" YELLOW "%d" RESET " |", row); // row indices 
+      for(column = 0; column < boardSize; column++){
+        if(game[row][column].isOpen){
+
+          if(game[row][column].isBomb == 1){
+            printf(RED " * " RESET); // bomb in red
+          } else {
+            printf(CYAN " %d " RESET, game[row][column].bombsAround);
+          }
+          
+        } else {
+          printf("   ");
+        }
+        printf("|");
+      }
+      printf("\n\t  -----------------------------------------\n");
+      printf("\n");
+    }
+}
+
 int main(){
     initializeGame();
     drawBombs(10);
+    populateBombsAround();
+    printBoard();
     return 0;
 }
