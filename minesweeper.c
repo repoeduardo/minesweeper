@@ -171,18 +171,25 @@ void play(){
   }while(hasWon() != 0 && game[r][c].isBomb == 0);
 
   if(game[r][c].isBomb == 1){
-    printf("\n\t Too bad, you lost\n");
+    printf("\n\t Too bad, you lost");
   } else {
-    printf("\n\tCONGRATULATIONS, YOU WON \n");
+    printf("\n\tCONGRATULATIONS, YOU WON");
   }
   printBoard();
 }
 
 
 int main(){
-    initializeGame();
-    drawBombs(10);
-    populateBombsAround();
-    play();
-    return 0;
+    int option;
+    do{
+        initializeGame();
+        drawBombs(10);
+        populateBombsAround();
+        printf("\n\n\t\t\tMINESWEEPER");
+        play();
+
+        printf("\nEnter 1 to play again: ");
+        scanf("%d", &option);
+    }while(option == 1);
+  return 0;
 }
