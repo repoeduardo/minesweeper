@@ -124,10 +124,65 @@ void printBoard(){
     }
 }
 
+void openCell(int r, int c){
+  if(coordinateIsValid(r, c) == 1 && game[r][c].isOpen == 0){
+    game[r][c].isOpen = 1;
+    if(game[r][c].bombsAround == 0){
+
+      // Recursive
+      openCell(r-1, c); // above
+      openCell(r+1, c); // below
+      openCell(r, c+1); // right
+      openCell(r, c-1); // left
+    }
+  }
+}
+
+// Function that verifies victory. Won: returns N; Not won yet: returns 0;
+int hasWon(){
+  int numberOfClosedPositions = 0;
+  for(row = 0; row < boardSize; row++){
+    for(column = 0; column < boardSize; column++){
+      if(game[row][column].isOpen == 0 && game[row][column].isBomb == 0){ // Is it closed and is it a bomb?
+        numberOfClosedPositions++;
+      }
+    }
+  }
+  return numberOfClosedPositions;
+}
+
+// Reads the coordinates
+void play(){
+  int r, c;
+
+  do{
+    printBoard();
+    do{
+      printf("\nEnter the row and column coordinates in this format [y] [x]. Example: 5 7");
+      printf("\n> ");
+      scanf("%d%d", &r, &c);
+
+      if(coordinateIsValid(r, c) == 0 || game[r][c].isOpen == 1){
+        printf("\nInvalid coordinate or already open");
+      }
+    }while(coordinateIsValid(r, c) == 0 || game[r][c].isOpen == 1);
+
+    openCell(r, c);
+  }while(hasWon() != 0 && game[r][c].isBomb == 0);
+
+  if(game[r][c].isBomb == 1){
+    printf("\n\t Too bad, you lost\n");
+  } else {
+    printf("\n\tCONGRATULATIONS, YOU WON \n");
+  }
+  printBoard();
+}
+
+
 int main(){
     initializeGame();
     drawBombs(10);
     populateBombsAround();
-    printBoard();
+    play();
     return 0;
 }
